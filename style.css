@@ -1,1 +1,137 @@
+/* ============================================
+   EDITING ZONE - style.css
+   Complete styles for floating 3D background + theme
+   Works with your index.html (Tailwind classes in HTML)
+   ============================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ---- Theme Variables ---- */
+:root{
+  --bg: #0a0a0a;
+  --ink: #f5f5f5;
+  --muted: #a3a3a3;
+  --card: #171717;
+  --card-hover: #1f1f1f;
+  --border: #262626;
+  --border-light: #2a2a2a;
+  --accent: #ffffff;
+  --accent-ink: #000000;
+}
+
+html.light{
+  --bg: #fafafa;
+  --ink: #171717;
+  --muted: #737373;
+  --card: #ffffff;
+  --card-hover: #f5f5f5;
+  --border: #e5e5e5;
+  --border-light: #eeeeee;
+  --accent: #000000;
+  --accent-ink: #ffffff;
+}
+
+/* ---- Reset & Base ---- */
+*, *::before, *::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x:hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color .3s ease, color .3s ease;
+}
+
+#root > div{
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- 3D Floating Background - CORE ---- */
+.ez-bg{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.ez-bg > *{
+  position: absolute;
+  color: var(--ink);
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Float animation */
+@keyframes ez-floaty{
+  0%,100%{ transform: translateY(0) rotate(var(--rot,0deg)); }
+  50%{ transform: translateY(-14px) rotate(var(--rot,0deg)); }
+}
+@keyframes ez-drift{
+  0%{ transform: translateX(0) rotate(var(--rot,0deg)); }
+  50%{ transform: translateX(8px) rotate(var(--rot,0deg)); }
+  100%{ transform: translateX(0) rotate(var(--rot,0deg)); }
+}
+
+.ez-floaty{
+  animation: ez-floaty 6s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* Individual icon positions - subtle, low opacity like in your design */
+.ez-i1{ left:6%; top:18%; opacity:.06; --rot:-8deg; }
+.ez-i2{ right:8%; top:12%; opacity:.05; --rot:6deg; animation-delay:1s; }
+.ez-i3{ left:12%; bottom:16%; opacity:.07; --rot:4deg; animation-delay:2s; }
+.ez-i4{ right:14%; bottom:22%; opacity:.06; --rot:-5deg; animation-delay:.5s; }
+.ez-i5{ left:45%; top:8%; opacity:.05; --rot:10deg; animation-delay:1.5s; }
+
+/* Bars - the 3 small pill shapes */
+.ez-bar{
+  display:block;
+  width:4rem;
+  height:1.5rem;
+  border-radius:.5rem;
+  background: var(--ink);
+  opacity:.12;
+}
+.ez-b1{ left:20%; top:30%; transform:rotate(-12deg); }
+.ez-b2{ right:22%; top:55%; transform:rotate(9deg); }
+.ez-b3{ left:60%; bottom:10%; transform:rotate(-6deg); }
+
+/* Legacy floaty classes (used by JS inertia) */
+.floaty, .floaty-slow, .floaty-fast{
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar{ width:8px; }
+::-webkit-scrollbar-track{ background: var(--bg); }
+::-webkit-scrollbar-thumb{ background: var(--border); border-radius:4px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--muted); }
+
+/* Selection */
+::selection{ background: var(--ink); color: var(--bg); }
+
+/* Focus states */
+:focus-visible{
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ---- Accessibility ---- */
+@media (prefers-reduced-motion: reduce){
+  .ez-floaty, .floaty, .floaty-slow, .floaty-fast, .ez-bar, .ez-bg > *{
+    animation: none !important;
+    transition: none !important;
+  }
+  html{ scroll-behavior:auto; }
+}
